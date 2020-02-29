@@ -1,0 +1,48 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:latest
+    working_directory: /go/src/github.com/haozibi/bego
+    steps:
+      - checkout
+      - run: # 只是 build 一下
+          name: run build
+          command: |
+            make build
+            ls -al
+  deploy:
+    docker:
+      - image: circleci/golang:latest
+    working_directory: /go/src/github.com/haozibi/bgo
+    steps:
+      - checkout
+      - run: go get -u github.com/tcnksm/ghr
+      - run: make build-all
+      - run: ls -al && ls -al release
+      - run:
+          name: create release
+          command: |
+            tag=$(git describe --tags --always)
+            echo $tag
+            if [ "$tag" ]; then
+              ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $tag release/
+            else
+              echo "The commit message(s) did not indicate a major/minor/patch version."
+            fi
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters: # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v(\d+)\.(\d+)\.(\d+)/
+            branches:
+              ignore: /.*/
