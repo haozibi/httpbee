@@ -23,7 +23,7 @@ type WebConfig struct {
 type WebResp struct {
 	Status  int               `json:"status"`
 	Headers map[string]string `json:"headers"`
-	Body    interface{}       `json:"body"`
+	Body    json.RawMessage   `json:"body"`
 }
 
 type Responser interface {

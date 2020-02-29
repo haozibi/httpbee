@@ -26,7 +26,7 @@ mkdir -p "${BGO_ROOT}/release"
 
 for OS in ${BGO_BUILD_PLATFORMS[@]}; do
   for ARCH in ${BGO_BUILD_ARCHS[@]}; do
-    NAME="${APP}-${OS}-${ARCH}"
+    NAME="${APP}-${VERSION}-${OS}-${ARCH}"
     if [[ "${OS}" == "windows" ]]; then
       NAME="${NAME}.exe"
     fi

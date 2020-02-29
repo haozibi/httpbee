@@ -31,9 +31,7 @@ build-all: clean
 	rm -rf release && chmod +x build.sh && ./build.sh
 
 govet: 
-	@ go vet . && go fmt ./... 
-	# && \
-	# (if [[ "$(gofmt -d $(find . -type f -name '*.go' -not -path "./vendor/*" -not -path "./tests/*" -not -path "./assets/*"))" == "" ]]; then echo "Good format"; else echo "Bad format"; exit 33; fi);
+	@ go vet . && go fmt ./...
 
 clean: 
 	@ rm -fr ${APP} main

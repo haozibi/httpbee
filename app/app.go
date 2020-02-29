@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/haozibi/httpbee/internal/response"
 )
 
@@ -62,11 +61,8 @@ func (f *FakeServer) serve(w http.ResponseWriter, r *http.Request, c *response.W
 		w.Header().Add(k, v)
 	}
 
-	ww := w.Header().Clone()
-	spew.Dump(ww)
-
 	w.WriteHeader(c.Status)
 	if c.Body != nil {
-		fmt.Fprintf(w, "%v", c.Body)
+		fmt.Fprintf(w, "%v", string(c.Body))
 	}
 }
