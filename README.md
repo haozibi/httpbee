@@ -83,6 +83,12 @@ $ httpbee -f=config.json
 - [ ] 是否支持 Query 参数
 - [ ] 是否支持 HTTP Method 方法过滤
 
+## 已知 Bug
+
+使用 vim 编辑 `config.json` 时会导致 [fsnotify](https://github.com/fsnotify/fsnotify) 监听错误（正常编辑会监听到 REMOVE 操作），导致后续继续 config.json 无效
+
+- [https://github.com/fsnotify/fsnotify/issues/92](https://github.com/fsnotify/fsnotify/issues/92#issuecomment-262435215)
+
 ## 注意事项
 
 - 路由精准匹配，并按照声明顺序尽心匹配

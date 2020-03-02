@@ -71,7 +71,7 @@ func (f *fileResponse) Get(router string) (*WebConfig, error) {
 		if err := f.loadFile(); err != nil {
 			return nil, err
 		}
-		f.mustSync.Toggle()
+		f.mustSync.CAS(true, false)
 	}
 	for _, v := range f.data {
 		if v.Router == router {
