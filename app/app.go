@@ -63,5 +63,10 @@ func (f *FakeServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp.Respond(w, r, c.Resp)
+	err = resp.Respond(w, r, c.Resp)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Path: %s, Error: %v", path, err)
+		return
+	}
 }
