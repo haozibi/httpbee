@@ -1,0 +1,47 @@
+[
+    {
+        "router": "/hello",
+        "resp": {
+            "status": 200,
+            "headers": {
+                "version": "0.0.1",
+                "content-type": "text/plain"
+            },
+            "body": "world"
+        }
+    },
+    {
+        "router": "/file",
+        "type": "static",
+        "resp": {
+            "status": 200,
+            "file": "logo.png"
+        }
+    },
+    {
+        "router": "/html",
+        "type": "static",
+        "resp": {
+            "status": 200,
+            "headers": {
+                "content-type": "text/html"
+            },
+            "file": "1.html"
+        }
+    },
+    {
+        "router": "/json",
+        "type": "body",
+        "resp": {
+            "status": 200,
+            "headers": {
+                "content-type": "application/json"
+            },
+            "body": {
+                "err_code": 0,
+                "err_msg": "success",
+                "data": "ok"
+            }
+        }
+    }
+]

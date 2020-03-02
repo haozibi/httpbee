@@ -34,6 +34,8 @@ func newRootCommand() *cobra.Command {
 				return cmd.Help()
 			}
 
+			app.ShowLogo()
+
 			s, err := app.NewFakeServer(opt)
 			if err != nil {
 				return err
@@ -54,11 +56,11 @@ func newVersionCommand() *cobra.Command {
 		Use:   "version",
 		Short: "Show version",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("%s \ntag: %s\nbuild: %s\nhash: %s\n",
+			fmt.Printf("%s %s (%s %s)\n",
 				app.BuildAppName,
 				app.BuildVersion,
-				app.BuildTime,
 				app.CommitHash,
+				app.BuildTime,
 			)
 		},
 	}

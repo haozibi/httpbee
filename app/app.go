@@ -5,33 +5,35 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/haozibi/httpbee/internal/response"
+	"github.com/haozibi/httpbee/internal/config"
+	"github.com/haozibi/httpbee/internal/responses"
+	"github.com/haozibi/httpbee/internal/responses/body"
+	"github.com/haozibi/httpbee/internal/responses/static"
 )
 
 // FakeServer fake server
 type FakeServer struct {
-	cfg       *Config
-	responser response.Responser
+	cfg    *Config
+	config config.Configer
 }
 
 func NewFakeServer(cfg Config) (*FakeServer, error) {
-	r, err := response.NewFileResponse(cfg.RespPath)
+	r, err := config.NewConfiger(cfg.RespPath)
 	if err != nil {
 		return nil, err
 	}
 	return &FakeServer{
-		cfg:       &cfg,
-		responser: r,
+		cfg:    &cfg,
+		config: r,
 	}, nil
 }
 
 // RunHTTP run http
 func (f *FakeServer) RunHTTP() error {
-	fmt.Printf(logo, BuildVersion)
 
-	addr := fmt.Sprintf(":%d", f.cfg.Port)
+	addr := fmt.Sprintf("0.0.0.0:%d", f.cfg.Port)
 
-	log.Println("listen and serve:", addr)
+	log.Println("[bee] listen and serve:", addr)
 	if err := http.ListenAndServe(addr, f); err != nil {
 		log.Fatalln(err)
 	}
@@ -41,28 +43,25 @@ func (f *FakeServer) RunHTTP() error {
 func (f *FakeServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 
-	c, err := f.responser.Get(path)
+	c, err := f.config.Get(path)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Path: %s, Error: %v", path, err)
 		return
 	}
-	f.serve(w, r, c.Resp)
-}
 
-func (f *FakeServer) serve(w http.ResponseWriter, r *http.Request, c *response.WebResp) {
-	if c == nil {
+	var resp responses.Responser
+
+	switch c.Type {
+	case "", "body":
+		resp = body.New()
+	case "static":
+		resp = static.New()
+	default:
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "Path: %s, Error: %v", r.URL.Path, fmt.Errorf("miss response"))
+		fmt.Fprintf(w, "Path: %s, Error: type error", path)
 		return
 	}
 
-	for k, v := range c.Headers {
-		w.Header().Add(k, v)
-	}
-
-	w.WriteHeader(c.Status)
-	if c.Body != nil {
-		fmt.Fprintf(w, "%v", string(c.Body))
-	}
+	resp.Respond(w, r, c.Resp)
 }

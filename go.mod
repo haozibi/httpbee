@@ -16,6 +16,8 @@ require (
 	go.uber.org/atomic v1.6.0
 	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae // indirect
 	golang.org/x/text v0.3.2 // indirect
+	golang.org/x/tools v0.0.0-20200212213342-7a21e308cf6c // indirect
+	golang.org/x/tools/gopls v0.1.8-0.20200228224639-71482053b885 // indirect
 	gopkg.in/ini.v1 v1.52.0 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )

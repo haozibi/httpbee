@@ -1,15 +1,22 @@
 package app
 
+import "fmt"
+
 var (
 	BuildTime    = ""
 	BuildVersion = ""
-	BuildAppName = "lcbadge"
+	BuildAppName = ""
 	CommitHash   = ""
 )
 
-var logo = `
+func ShowLogo() {
+	var logo = `
                     .' '.            __
             .       .   .           (__\_
 HTTP Bee     .         .         . -{{_(|8)
 %s        ' .  . ' ' .  . '     (__/
+Github: https://github.com/haozibi/httpbee
+
 `
+	fmt.Printf(logo, BuildVersion)
+}

@@ -43,7 +43,7 @@ for OS in ${BGO_BUILD_PLATFORMS[@]}; do
         echo "Building for ${OS}/${ARCH} not supported."
     else
         echo "Building for ${OS}/${ARCH} with CGO_ENABLED=${CGO_ENABLED}"
-        GOARCH=${ARCH} GOOS=${OS} CGO_ENABLED=${CGO_ENABLED} ${GO_BUILD_CMD} -ldflags "${LDFLAGS}"\
+        GOARCH=${ARCH} GOOS=${OS} CGO_ENABLED=${CGO_ENABLED} ${GO_BUILD_CMD} -ldflags "${GO_BUILD_LDFLAGS}"\
             -o "${BGO_ROOT}/release/${NAME}" main.go
         pushd "${BGO_ROOT}/release" > /dev/null
         shasum -a 256 "${NAME}"  >> "${APP}-${VERSION}.sha256"

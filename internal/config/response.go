@@ -1,4 +1,4 @@
-package response
+package config
 
 import (
 	"encoding/json"
@@ -13,20 +13,8 @@ import (
 	"go.uber.org/atomic"
 )
 
-// WebConfig Config
-type WebConfig struct {
-	Router string   `json:"router"`
-	Resp   *WebResp `json:"resp"`
-}
-
-// WebResp WebResp
-type WebResp struct {
-	Status  int               `json:"status"`
-	Headers map[string]string `json:"headers"`
-	Body    json.RawMessage   `json:"body"`
-}
-
-type Responser interface {
+// Configer Configer
+type Configer interface {
 	Get(router string) (*WebConfig, error)
 }
 
@@ -38,7 +26,8 @@ type fileResponse struct {
 	data     []WebConfig
 }
 
-func NewFileResponse(path string) (Responser, error) {
+// NewConfiger NewConfiger
+func NewConfiger(path string) (Configer, error) {
 
 	filePath, err := filepath.Abs(path)
 	if err != nil {
@@ -61,7 +50,7 @@ func NewFileResponse(path string) (Responser, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "path: %s", filePath)
 	}
-	log.Printf("path: %s add file watcher\n", filePath)
+	log.Printf("[bee] add file watcher, path: %s \n", filePath)
 	go f.watch()
 
 	return f, nil
@@ -98,9 +87,9 @@ func (f *fileResponse) watch() {
 		select {
 		case e := <-f.watcher.Events:
 			f.mustSync.CAS(false, true)
-			log.Println("file", e)
+			log.Println("[file] config modify", e.Name)
 		case err := <-f.watcher.Errors:
-			log.Fatalln("failed to watch response file", err)
+			log.Fatalln("[file] failed to watch response file", err)
 		}
 	}
 }
